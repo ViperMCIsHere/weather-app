@@ -37,52 +37,63 @@ function drawEarth() {
 drawEarth();
 // === 3D Earth with Three.js ===
 // === 3D Earth with Three.js ===
+// === 3D Earth with Stars Background ===
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+);
+
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.getElementById("bgScene").appendChild(renderer.domElement);
 
 const textureLoader = new THREE.TextureLoader();
 
-// 🌍 Earth texture
-const earthTexture = textureLoader.load("https://threejs.org/examples/textures/land_ocean_ice_cloud_2048.jpg");
+// 🌍 Earth
+const earthTexture = textureLoader.load("https://threejs.org/examples/textures/earth_atmos_2048.jpg");
 const earthGeo = new THREE.SphereGeometry(2, 64, 64);
-const earthMat = new THREE.MeshStandardMaterial({ map: earthTexture });
+const earthMat = new THREE.MeshPhongMaterial({ map: earthTexture });
 const earth = new THREE.Mesh(earthGeo, earthMat);
 scene.add(earth);
 
-// ✨ Stars background
-const starsTexture = textureLoader.load("https://threejs.org/examples/textures/cube/space/px.jpg");
+// ✨ Stars (simple space background)
+const starTexture = textureLoader.load("https://threejs.org/examples/textures/galaxy_starfield.png");
 const starGeo = new THREE.SphereGeometry(90, 64, 64);
 const starMat = new THREE.MeshBasicMaterial({
-    map: starsTexture,
-    side: THREE.BackSide
+  map: starTexture,
+  side: THREE.BackSide
 });
 const stars = new THREE.Mesh(starGeo, starMat);
 scene.add(stars);
 
-// 💡 Light
+// 💡 Lights
 const light = new THREE.PointLight(0xffffff, 1.5);
 light.position.set(5, 3, 5);
 scene.add(light);
 
+const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+scene.add(ambientLight);
+
 camera.position.z = 5;
 
-// 🎥 Animate Earth
-function animateEarth() {
-    requestAnimationFrame(animateEarth);
-    earth.rotation.y += 0.002;
-    renderer.render(scene, camera);
+// 🎥 Animate
+function animate() {
+  requestAnimationFrame(animate);
+  earth.rotation.y += 0.002; // slow rotation
+  renderer.render(scene, camera);
 }
-animateEarth();
+animate();
 
 // 📱 Responsive resize
 window.addEventListener("resize", () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
 });
+
 
 
 // Weather functions
@@ -183,5 +194,6 @@ document.addEventListener("click", e => {
     suggestionsList.innerHTML = "";
   }
 });
+
 
 
