@@ -35,6 +35,52 @@ function drawEarth() {
   requestAnimationFrame(drawEarth);
 }
 drawEarth();
+// === 3D Earth with Three.js ===
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.getElementById("bgScene").appendChild(renderer.domElement);
+
+// Earth texture
+const textureLoader = new THREE.TextureLoader();
+const earthTexture = textureLoader.load("https://raw.githubusercontent.com/rajatmiglani/weather-textures/main/earthmap.jpg");
+const geometry = new THREE.SphereGeometry(2, 64, 64);
+const material = new THREE.MeshStandardMaterial({ map: earthTexture });
+const earth = new THREE.Mesh(geometry, material);
+scene.add(earth);
+
+// Light
+const light = new THREE.PointLight(0xffffff, 1.2);
+light.position.set(5, 3, 5);
+scene.add(light);
+
+// Stars background
+const starGeometry = new THREE.SphereGeometry(90, 64, 64);
+const starMaterial = new THREE.MeshBasicMaterial({
+    map: textureLoader.load("https://raw.githubusercontent.com/rajatmiglani/weather-textures/main/stars.jpg"),
+    side: THREE.BackSide
+});
+const starField = new THREE.Mesh(starGeometry, starMaterial);
+scene.add(starField);
+
+// Camera
+camera.position.z = 5;
+
+// Animate
+function animateEarth() {
+    requestAnimationFrame(animateEarth);
+    earth.rotation.y += 0.002; // Rotate Earth
+    renderer.render(scene, camera);
+}
+animateEarth();
+
+// Responsive resize
+window.addEventListener("resize", () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
 
 // Weather functions
 const weatherOutput = document.getElementById("weatherOutput");
@@ -134,3 +180,4 @@ document.addEventListener("click", e => {
     suggestionsList.innerHTML = "";
   }
 });
+
