@@ -103,3 +103,28 @@ body {
   margin-top: 20px;
   font-size: 18px;
 }
+/* 3D Earth background */
+#bgScene {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  overflow: hidden;
+}
+
+/* Glassmorphism card */
+.container {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  padding: 30px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.container:hover {
+  transform: scale(1.02);
+}
